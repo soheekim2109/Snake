@@ -9,7 +9,7 @@ public class SnakeDriver {
 	public static void main(String[] args) {
 		SnakeGUI gui = new SnakeGUI();
 		SnakeModel model = new SnakeModel(gui);
-		SnakeController cont = new SnakeController(gui, model);
+		new SnakeController(gui, model);
 	}
 
 }

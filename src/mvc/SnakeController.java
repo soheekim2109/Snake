@@ -19,25 +19,40 @@ public class SnakeController implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_LEFT ||
 				e.getKeyCode() == KeyEvent.VK_A) {
-			model.setDirection(Direction.LEFT);
+			if (model.getDirection() == Direction.UP ||
+					model.getDirection() == Direction.DOWN ||
+					model.getDirection() == null) {
+				model.setDirection(Direction.LEFT);
+			}
 		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT ||
 				e.getKeyCode() == KeyEvent.VK_D) {
-			model.setDirection(Direction.RIGHT);
+			if (model.getDirection() == Direction.UP ||
+					model.getDirection() == Direction.DOWN ||
+					model.getDirection() == null) {
+				model.setDirection(Direction.RIGHT);
+			}
+
 		} else if (e.getKeyCode() == KeyEvent.VK_UP ||
 				e.getKeyCode() == KeyEvent.VK_W) {
-			model.setDirection(Direction.UP);
+			if (model.getDirection() == Direction.LEFT ||
+					model.getDirection() == Direction.RIGHT ||
+					model.getDirection() == null) {
+				model.setDirection(Direction.UP);
+			}
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN ||
 				e.getKeyCode() == KeyEvent.VK_S) {
-			model.setDirection(Direction.DOWN);
+			if (model.getDirection() == Direction.LEFT ||
+					model.getDirection() == Direction.RIGHT ||
+					model.getDirection() == null) {
+				model.setDirection(Direction.DOWN);
+			}
 		} else if (e.getKeyCode() == KeyEvent.VK_T) {
 			// new game
 			gui.resetGrid();
-//			model.stopGame();
 			model.newModel();
-			System.out.println("new game");
-			// reset snake, current position, apple position(, points)
+			System.out.println("\nNew game");
 		} else if (e.getKeyCode() == KeyEvent.VK_G) {
-			model.setDirection(null);
+			model.pauseGame();
 		} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			System.exit(0);
 		}
