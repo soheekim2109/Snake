@@ -1,8 +1,13 @@
 package mvc;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -17,9 +22,12 @@ public class SnakeModel {
 	private int appleRow;
 	private int appleCol;
 	
+	private int highscore;
 	private int points;
 	private boolean gameover;
 	private boolean pause;
+	
+	private File hscorefile = new File("highscore");
 	
 	private Timer timer = new Timer();
 	private TimerTask task = new TimerTask() {
@@ -51,12 +59,15 @@ public class SnakeModel {
 		col = randomNum(SnakeGUI.COLS);
 		gui.colourDot(row, col, Color.GREEN);
 		
-		newApple(); // appleRow, appleCol
+		newApple();
 		snake.clear();
 		points = 0;
 		direction = null;
 		gameover = false;
 		pause = false;
+		
+		gui.updateScore(points);
+		gui.updateHighScore(highscore());
 	}
 
 	public void newApple() {
@@ -79,6 +90,32 @@ public class SnakeModel {
 		}
 		
 		return valid;
+	}
+	
+	public int highscore() {
+		try {
+			Scanner hscore = new Scanner(hscorefile);
+			if (hscore.hasNextInt()) {
+				highscore = hscore.nextInt();
+			}
+			hscore.close();
+		} catch (FileNotFoundException e) {
+			highscore = 0;
+			e.printStackTrace();
+		}
+		
+		return highscore;
+	}
+	
+	// called when current points > high score
+	private void updateHighscore() {
+		try {
+			PrintWriter hscore = new PrintWriter(hscorefile);
+			hscore.print(points);
+			hscore.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void pauseGame() {
@@ -108,7 +145,6 @@ public class SnakeModel {
 		if (row < 0 || row >= SnakeGUI.ROWS ||
 				col < 0 || col >= SnakeGUI.COLS) {
 			gameover = true;
-			System.out.println("Wall touched");
 		} else {
 			boolean apple = row == appleRow && col == appleCol;
 			boolean empty = snake.isEmpty();
@@ -174,7 +210,15 @@ public class SnakeModel {
 		newApple();
 		
 		points++;
-		System.out.println("Points: " + points);
+		gui.updateScore(points);
+		
+		if (points > highscore) {
+			updateHighscore();
+		}
+	}
+	
+	public int getPoints() {
+		return points;
 	}
 	
 	// checks if snake bites itself
@@ -184,7 +228,6 @@ public class SnakeModel {
 		for (int i = 1; i < snake.size(); i++) {
 			if (row == snake.get(i).row && col == snake.get(i).col) {
 				valid = false;
-				System.out.println("Snake bitten");
 			}
 		}
 		
@@ -195,5 +238,15 @@ public class SnakeModel {
 	private int randomNum(int n) {
 		Random random = new Random();
 		return random.nextInt(n);
+	}
+	
+	public class SnakeDot {
+		public int row;
+		public int col;
+		
+		public SnakeDot(int row, int col) {
+			this.row = row;
+			this.col = col;
+		}
 	}
 }

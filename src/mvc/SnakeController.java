@@ -46,11 +46,11 @@ public class SnakeController implements KeyListener {
 					model.getDirection() == null) {
 				model.setDirection(Direction.DOWN);
 			}
-		} else if (e.getKeyCode() == KeyEvent.VK_T) {
+		} else if (e.getKeyCode() == KeyEvent.VK_T ||
+				e.getKeyCode() == KeyEvent.VK_ENTER) {
 			// new game
 			gui.resetGrid();
 			model.newModel();
-			System.out.println("\nNew game");
 		} else if (e.getKeyCode() == KeyEvent.VK_G) {
 			model.pauseGame();
 		} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
